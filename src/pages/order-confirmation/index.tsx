@@ -1,11 +1,5 @@
-import React from 'react'
-
 const OrderConfirmationPage = () => {
-  return (
-    <div>
-      confirmation !
-    </div>
-  )
-}
+  return <div>confirmation !</div>;
+};
 
-export default OrderConfirmationPage
+export default OrderConfirmationPage;

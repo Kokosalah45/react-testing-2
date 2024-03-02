@@ -1,5 +1,8 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import path from "path";
+
+const dirName = path.dirname(new URL(import.meta.url).pathname);
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -19,5 +22,10 @@ export default defineConfig({
     port: 3000,
     // exit if port 3000 is in use (to avoid CORS errors)
     strict: true,
+  },
+  resolve: {
+    alias: {
+      "@": path.resolve(dirName, "./src"),
+    },
   },
 });

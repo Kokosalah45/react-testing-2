@@ -1,11 +1,5 @@
-import React from 'react'
-
 const OrderSummaryPage = () => {
-  return (
-    <div>
-      summary !
-    </div>
-  )
-}
+  return <div>summary !</div>;
+};
 
-export default OrderSummaryPage
+export default OrderSummaryPage;
