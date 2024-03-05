@@ -1,14 +1,7 @@
-import OrderConfirmationSection from "@/components/OrderConfirmationSection";
+import OrderSelectionForm from "@/components/OrderSelectionForm";
 
 const OrderPage = () => {
-  return (
-    <div>
-      <OrderConfirmationSection
-        onSubmitOrder={() => console.log("order !!")}
-        termsAndConditionsMessage="hello world"
-      />
-    </div>
-  );
+  return <OrderSelectionForm />;
 };
 
 export default OrderPage;

@@ -15,7 +15,7 @@ export default defineConfig({
     // you might want to disable the `css: true` line, since we don't have
     // tests that rely on CSS -- and parsing CSS is slow.
     // I'm leaving it in here becasue often people want to parse CSS in tests.
-    css: true,
+    css: false,
   },
   server: {
     // to match sundae server expectation

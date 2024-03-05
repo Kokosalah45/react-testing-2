@@ -5,9 +5,6 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
 
 import App from "./App.jsx";
-import OrderPage from "./pages/order";
-import OrderSummaryPage from "./pages/order-summary";
-import OrderConfirmationPage from "./pages/order-confirmation";
 
 const router = createBrowserRouter([
   {
@@ -15,16 +12,33 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        element: <OrderPage />,
         index: true,
+        async lazy() {
+          const orderPage = await import("./pages/order");
+          return {
+            Component: orderPage.default,
+          };
+        },
       },
       {
         path: "/order-summary",
-        element: <OrderSummaryPage />,
+        async lazy() {
+          const OrderSummaryPage = await import("./pages/order-summary");
+          return {
+            Component: OrderSummaryPage.default,
+          };
+        },
       },
       {
         path: "/order-confirmation",
-        element: <OrderConfirmationPage />,
+        async lazy() {
+          const OrderConfirmationPage = await import(
+            "./pages/order-confirmation"
+          );
+          return {
+            Component: OrderConfirmationPage.default,
+          };
+        },
       },
     ],
   },
