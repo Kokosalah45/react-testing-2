@@ -1,14 +1,10 @@
-import { test, expect, vitest } from "vitest";
+import { test, expect } from "vitest";
 import { screen, render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import OrderConfirmationForm from ".";
+import OrderConfirmationPage from ".";
 
 test("renders a button", async () => {
-  render(
-    <OrderConfirmationForm
-      onSubmitOrder={async () => console.log("order confirmed")}
-    />
-  );
+  render(<OrderConfirmationPage />);
   const buttonEL = screen.getByRole("button", {
     name: /Confirm Order/i,
   });
@@ -16,22 +12,14 @@ test("renders a button", async () => {
 });
 
 test("renders a checkbox", async () => {
-  render(
-    <OrderConfirmationForm
-      onSubmitOrder={async () => console.log("order confirmed")}
-    />
-  );
+  render(<OrderConfirmationPage />);
   const checkboxEL = screen.getByRole("checkbox");
   expect(checkboxEL).toBeInTheDocument();
 });
 
 test("clicking the checkbox toggles the checked state", async () => {
   const user = userEvent.setup();
-  render(
-    <OrderConfirmationForm
-      onSubmitOrder={async () => console.log("order confirmed")}
-    />
-  );
+  render(<OrderConfirmationPage />);
   const checkboxEL = screen.getByRole("checkbox");
   await user.click(checkboxEL);
   expect(checkboxEL).toBeChecked();
@@ -39,36 +27,23 @@ test("clicking the checkbox toggles the checked state", async () => {
   expect(checkboxEL).not.toBeChecked();
 });
 
-test("clicking the button shouldn't call the onSubmitOrder", async () => {
+test("should toggle the button state on checking and unchecking terms and conditions checkbox", async () => {
   const user = userEvent.setup();
-  const onSubmitOrder = vitest.fn();
-  render(<OrderConfirmationForm onSubmitOrder={onSubmitOrder} />);
+  render(<OrderConfirmationPage />);
+  const checkboxEL = screen.getByRole("checkbox", {
+    name: /I agree on Terms and Conditions/i,
+  });
   const buttonEL = screen.getByRole("button", {
     name: /Confirm Order/i,
   });
-  await user.click(buttonEL);
-  expect(onSubmitOrder).not.toHaveBeenCalled();
-});
-
-test("clicking the button should call the onSubmitOrder if the user agrees on the terms and conditions", async () => {
-  const user = userEvent.setup();
-  const onSubmitOrder = vitest.fn();
-  render(<OrderConfirmationForm onSubmitOrder={onSubmitOrder} />);
-  const buttonEL = screen.getByRole("button", {
-    name: /Confirm Order/i,
-  });
-  const checkboxEL = screen.getByRole("checkbox");
   await user.click(checkboxEL);
-  await user.click(buttonEL);
-  expect(onSubmitOrder).toHaveBeenCalled();
+  expect(buttonEL).toBeEnabled();
+  await user.click(checkboxEL);
+  expect(buttonEL).toBeDisabled();
 });
 
 test("terms and conditions popover shouldn't be on the screen", async () => {
-  render(
-    <OrderConfirmationForm
-      onSubmitOrder={async () => console.log("order confirmed")}
-    />
-  );
+  render(<OrderConfirmationPage />);
 
   const popover = screen.queryByRole("dialog", {
     name: /Place content for the popover here./i,
@@ -79,11 +54,7 @@ test("terms and conditions popover shouldn't be on the screen", async () => {
 test("terms and conditions popover should be on the screen on hover", async () => {
   const user = userEvent.setup();
 
-  render(
-    <OrderConfirmationForm
-      onSubmitOrder={async () => console.log("order confirmed")}
-    />
-  );
+  render(<OrderConfirmationPage />);
 
   const termsAndConditions = screen.getByRole("button", {
     name: /Terms and Conditions/i,

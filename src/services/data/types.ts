@@ -1,7 +1,7 @@
 export type OrderOption = {
   id: number;
   name: string;
-  price: number;
+  imagePath: string;
 };
 
 export type OrderCategory = {

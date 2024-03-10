@@ -1,6 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
 
 import "./index.css";
 
@@ -13,10 +17,14 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
+        element: <Navigate to="/order-entry" />,
+      },
+      {
+        path: "/order-entry",
         async lazy() {
-          const orderPage = await import("./pages/order");
+          const orderEntryPage = await import("./pages/order-entry/index.js");
           return {
-            Component: orderPage.default,
+            Component: orderEntryPage.default,
           };
         },
       },

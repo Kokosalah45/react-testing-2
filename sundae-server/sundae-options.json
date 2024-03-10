@@ -1,0 +1,67 @@
+{
+  "scoops": {
+    "multiSelect": true,
+    "max": 1,
+    "price": "3.5",
+    "options": [
+      {
+        "id": 1,
+        "name": "Mint chip",
+        "imagePath": "http://localhost:3030/images/mint-chip.png"
+      },
+      {
+        "id": 2,
+        "name": "Vanilla",
+        "imagePath": "http://localhost:3030/images/vanilla.png"
+      },
+      {
+        "id": 3,
+        "name": "Chocolate",
+        "imagePath": "http://localhost:3030/images/chocolate.png"
+      },
+      {
+        "id": 4,
+        "name": "Salted caramel",
+        "imagePath": "http://localhost:3030/images/salted-caramel.png"
+      }
+    ]
+  },
+
+  "toppings": {
+    "multiSelect": true,
+    "max": 3,
+    "price": "1.5",
+    "options": [
+      {
+        "id": 1,
+        "name": "M&Ms",
+        "imagePath": "http://localhost:3030/images/m-and-ms.png"
+      },
+      {
+        "id": 2,
+        "name": "Hot fudge",
+        "imagePath": "http://localhost:3030/images/hot-fudge.png"
+      },
+      {
+        "id": 3,
+        "name": "Peanut butter cups",
+        "imagePath": "http://localhost:3030/images/peanut-butter-cups.png"
+      },
+      {
+        "id": 4,
+        "name": "Gummi bears",
+        "imagePath": "http://localhost:3030/images/gummi-bears.png"
+      },
+      {
+        "id": 5,
+        "name": "Mochi",
+        "imagePath": "http://localhost:3030/images/mochi.png"
+      },
+      {
+        "id": 6,
+        "name": "Cherries",
+        "imagePath": "http://localhost:3030/images/cherries.png"
+      }
+    ]
+  }
+}
