@@ -5,28 +5,29 @@ import { afterEach } from "node:test";
 import { server } from "@/mocks/node";
 import { errorHandlers } from "@/mocks/handlers";
 import userEvent from "@testing-library/user-event";
+import { customRender } from "@/test-utils";
 
 afterEach(() => {
   server.resetHandlers();
 });
 
 test("renders a selection sections", async () => {
-  render(<OrderPage />);
+  customRender(<OrderPage />);
 
   const scoopsSection = await screen.findByRole("heading", {
-    name: /scoops/i,
+    name: "scoops",
   });
   const toppingsSection = await screen.findByRole("heading", {
-    name: /toppings/i,
+    name: "toppings",
   });
   expect(scoopsSection).toBeInTheDocument();
   expect(toppingsSection).toBeInTheDocument();
 });
 
-test.only("renders correct subtotals for scoops and toppings", async () => {
+test("renders correct subtotals for scoops and toppings", async () => {
   const user = userEvent.setup();
 
-  render(<OrderPage />);
+  customRender(<OrderPage />);
 
   const scoopsSubtotal = await screen.findByText(/scoops subtotal/i);
   const toppingsSubtotal = await screen.findByText(/toppings subtotal/i);
@@ -57,13 +58,13 @@ test.only("renders correct subtotals for scoops and toppings", async () => {
 
 test("renders alert with proper messages when an error takes place", async () => {
   server.use(...errorHandlers);
-  render(<OrderPage />);
+  customRender(<OrderPage />);
   const alert = await screen.findAllByRole("alert");
   expect(alert).toHaveLength(2);
 });
 
 test("renders a selection images", async () => {
-  render(<OrderPage />);
+  customRender(<OrderPage />);
   const selectionsImages = await screen.findAllByRole("img");
   expect(selectionsImages).toHaveLength(10);
 });
