@@ -48,6 +48,7 @@ test.only("renders correct subtotals for scoops and toppings", async () => {
 
   await user.click(chocolateScoop);
   await user.click(mintScoop);
+  await user.clear(cherryTopping);
   await user.type(cherryTopping, "2");
 
   expect(scoopsSubtotal).toHaveTextContent("scoops subtotal: $7");
