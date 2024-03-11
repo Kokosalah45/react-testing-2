@@ -2,7 +2,7 @@
   "scoops": {
     "multiSelect": true,
     "max": 1,
-    "price": "3.5",
+    "price": 3.5,
     "options": [
       {
         "id": 1,
@@ -30,7 +30,7 @@
   "toppings": {
     "multiSelect": true,
     "max": 3,
-    "price": "1.5",
+    "price": 1.5,
     "options": [
       {
         "id": 1,

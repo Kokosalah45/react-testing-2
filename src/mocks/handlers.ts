@@ -6,6 +6,7 @@ export const handlers = [
     return HttpResponse.json({
       toppings: {
         multiSelect: true,
+        price: 1.5,
         max: 3,
         options: [
           {
@@ -42,6 +43,7 @@ export const handlers = [
       },
       scoops: {
         multiSelect: false,
+        price: 3.5,
         max: 1,
         options: [
           {

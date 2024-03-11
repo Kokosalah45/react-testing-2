@@ -6,6 +6,7 @@ export type OrderOption = {
 
 export type OrderCategory = {
   multiSelect: boolean;
+  price: number;
   max: number;
   options: OrderOption[];
 };
