@@ -1,8 +1,9 @@
 import React, { ReactElement } from "react";
 import { render, RenderOptions } from "@testing-library/react";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import { MemoryRouter } from "react-router-dom";
 
-const AllTheProviders = ({ children }: { children: React.ReactNode }) => {
+const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
     <QueryClientProvider
       client={
@@ -16,7 +17,9 @@ const AllTheProviders = ({ children }: { children: React.ReactNode }) => {
         })
       }
     >
-      {children}
+      <MemoryRouter initialEntries={["/"]} initialIndex={0}>
+        {children}
+      </MemoryRouter>
     </QueryClientProvider>
   );
 };
@@ -24,7 +27,11 @@ const AllTheProviders = ({ children }: { children: React.ReactNode }) => {
 const customRender = (
   ui: ReactElement,
   options?: Omit<RenderOptions, "wrapper">
-) => render(ui, { wrapper: AllTheProviders, ...options });
+) =>
+  render(ui, {
+    wrapper: Providers,
+    ...options,
+  });
 
 export * from "@testing-library/react";
-export { customRender };
+export { customRender as render };

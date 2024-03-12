@@ -17,7 +17,7 @@ import useGetOrderSelectionOptions from "@/hooks/useGetOrderSelectionOptions";
 import { useNavigate } from "react-router-dom";
 
 const OrderSelectionForm = () => {
-  const { data, isLoading, isFetching, isError, refetch, status } =
+  const { data, isLoading, isFetching, isError, status } =
     useGetOrderSelectionOptions();
 
   const navigate = useNavigate();
@@ -72,21 +72,37 @@ const OrderSelectionForm = () => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit((data) => {
+          const { scoops, toppings } = data;
+
+          if (orderSubtotals.scoops === 0) return;
+
           navigate(`/order-summary`, {
-            state: data,
+            state: {
+              scoops: scoops.filter((scoop) => scoop.quantity > 0),
+              toppings:
+                orderSubtotals.toppings === 0
+                  ? []
+                  : toppings.filter((topping) => topping.quantity > 0),
+              orderSubtotals,
+              orderGrandTotal: orderSubtotals.scoops + orderSubtotals.toppings,
+            },
           });
         })}
-        className="space-y-8"
+        className="space-y-3"
       >
         {valueEntries.map(([key, selectionOptions]) => {
           const category = key as "scoops" | "toppings";
           const categoryMeta = data?.[category];
           return (
-            <section key={category}>
-              <h2 className="text-2xl font-bold capitalize mb-5">{category}</h2>
-              <h4>
-                {category} subtotal: ${orderSubtotals[category]}
-              </h4>
+            <section className="flex flex-col gap-2" key={category}>
+              <div className="ml-2">
+                <h2 className="text-2xl font-bold capitalize">{category}</h2>
+                <h4>${categoryMeta?.price} each</h4>
+                <h4>
+                  {" "}
+                  {category} subtotal: ${orderSubtotals[category]}
+                </h4>
+              </div>
               <menu className="grid grid-cols-four-cols gap-5" key={key}>
                 {!isError ? (
                   selectionOptions.map((option, index) => {
@@ -154,6 +170,10 @@ const OrderSelectionForm = () => {
             </section>
           );
         })}
+
+        <p className="text-2xl font-bold">
+          Grand Total : {orderSubtotals.scoops + orderSubtotals.toppings}
+        </p>
         <Button type="submit" className="hover:bg-slate-950">
           Submit
         </Button>
