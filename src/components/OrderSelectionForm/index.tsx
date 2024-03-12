@@ -72,9 +72,9 @@ const OrderSelectionForm = () => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit((data) => {
-          const urlParams = new URLSearchParams();
-          urlParams.append("selections", JSON.stringify(data));
-          navigate(`/order-summary?${urlParams.toString()}`);
+          navigate(`/order-summary`, {
+            state: data,
+          });
         })}
         className="space-y-8"
       >

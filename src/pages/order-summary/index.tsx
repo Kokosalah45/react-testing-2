@@ -1,9 +1,9 @@
-import { useSearchParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const OrderSummaryPage = () => {
-  const [searchParams] = useSearchParams();
+  const { state } = useLocation();
 
-  return <pre>{searchParams.get("selections")}</pre>;
+  return <pre>{JSON.stringify({ state }, null, 2)}</pre>;
 };
 
 export default OrderSummaryPage;
