@@ -1,5 +1,9 @@
+import { useSearchParams } from "react-router-dom";
+
 const OrderSummaryPage = () => {
-  return <div>summary !</div>;
+  const [searchParams] = useSearchParams();
+
+  return <pre>{searchParams.get("selections")}</pre>;
 };
 
 export default OrderSummaryPage;

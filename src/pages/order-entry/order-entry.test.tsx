@@ -1,15 +1,10 @@
 import { test, expect } from "vitest";
-import { screen, render } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import OrderPage from ".";
-import { afterEach } from "node:test";
 import { server } from "@/mocks/node";
 import { errorHandlers } from "@/mocks/handlers";
 import userEvent from "@testing-library/user-event";
 import { customRender } from "@/test-utils";
-
-afterEach(() => {
-  server.resetHandlers();
-});
 
 test("renders a selection sections", async () => {
   customRender(<OrderPage />);
@@ -22,6 +17,19 @@ test("renders a selection sections", async () => {
   });
   expect(scoopsSection).toBeInTheDocument();
   expect(toppingsSection).toBeInTheDocument();
+});
+
+test("renders alert with proper messages when an error takes place", async () => {
+  server.use(...errorHandlers);
+  customRender(<OrderPage />);
+  const alerts = await screen.findAllByRole("alert");
+  expect(alerts).toHaveLength(2);
+});
+
+test("renders a selection images", async () => {
+  customRender(<OrderPage />);
+  const selectionsImages = await screen.findAllByRole("img");
+  expect(selectionsImages).toHaveLength(10);
 });
 
 test("renders correct subtotals for scoops and toppings", async () => {
@@ -54,17 +62,4 @@ test("renders correct subtotals for scoops and toppings", async () => {
 
   expect(scoopsSubtotal).toHaveTextContent("scoops subtotal: $7");
   expect(toppingsSubtotal).toHaveTextContent("toppings subtotal: $3");
-});
-
-test("renders alert with proper messages when an error takes place", async () => {
-  server.use(...errorHandlers);
-  customRender(<OrderPage />);
-  const alert = await screen.findAllByRole("alert");
-  expect(alert).toHaveLength(2);
-});
-
-test("renders a selection images", async () => {
-  customRender(<OrderPage />);
-  const selectionsImages = await screen.findAllByRole("img");
-  expect(selectionsImages).toHaveLength(10);
 });
