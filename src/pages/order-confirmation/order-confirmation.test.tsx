@@ -1,7 +1,23 @@
-import { test, expect } from "vitest";
-import { screen, render } from "@testing-library/react";
+import { test, expect, beforeAll, vi } from "vitest";
+import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import OrderConfirmationPage from ".";
+import { render } from "@/test-utils";
+
+beforeAll(() => {
+  vi.mock("react-router-dom", async (importOriginal) => {
+    const mod = (await importOriginal()) as Record<string, unknown>;
+    return {
+      ...mod,
+      // replace some exports
+      useLocation: () => ({
+        state: {
+          orderNumber: 1234,
+        },
+      }),
+    };
+  });
+});
 
 test("renders a button", async () => {
   render(<OrderConfirmationPage />);

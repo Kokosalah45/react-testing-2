@@ -1,55 +1,97 @@
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { OrderOption } from "@/services/data/types";
-import { Link, Navigate, useLocation } from "react-router-dom";
-
-type OrderSummaryPageState = {
-  scoops: (Omit<OrderOption, "imagePath"> & { quantity: number })[];
-  toppings: (Omit<OrderOption, "imagePath"> & { quantity: number })[];
-  orderSubtotals: { scoops: number; toppings: number };
-  orderGrandTotal: number;
-} | null;
+import usePostOrderRequest from "@/hooks/usePostOrderRequest";
+import { OrderRequest } from "@/services/data/postOrderSelection";
+import { useEffect } from "react";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 
 const OrderSummaryPage = () => {
   const { state } = useLocation() as {
-    state: OrderSummaryPageState;
+    state: OrderRequest;
   };
 
-  if (!state) return <Navigate to={"/order-entry"} />;
+  useEffect(() => {
+    window.history.replaceState({}, "");
+  }, []);
+
+  const { data, isSuccess, mutate, isError } = usePostOrderRequest();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isSuccess) {
+      navigate("/order-confirmation", {
+        state: data,
+      });
+    }
+  }, [isSuccess]);
+
+  if (!state) return <Navigate to={"/"} />;
+
+  if (isError)
+    return (
+      <Alert>
+        <AlertTitle>Something went wrong</AlertTitle>
+        <AlertDescription>
+          There was an error processing your order. Please try again.
+        </AlertDescription>
+      </Alert>
+    );
 
   return (
     <>
       <header className="p-5">
         <h1 className="text-3xl font-bold text-center rounded-md p-5 bg-orange-300 shadow-md">
-          Order Summary{" "}
+          Order Summary
         </h1>
       </header>
-      <main className="p-8 bg-orange-300 m-5 rounded-lg shadow-md">
-        <h2>Scoops: {state.orderSubtotals.scoops}</h2>
-        <ul>
-          {state.scoops.map((scoop) => (
-            <li key={scoop.name}>
-              {scoop.name} - {scoop.quantity}
-            </li>
-          ))}
-        </ul>
+      <main className="p-8 bg-orange-300 m-5 rounded-lg shadow-md flex flex-col items-start gap-10">
+        <section>
+          <header className="flex flex-col gap-1">
+            <h2 className="text-2xl font-bold">Scoops</h2>
+            <h3 className="text-md font-semibold">
+              Subtotal: {state.orderSubtotals.scoops}
+            </h3>
+          </header>
+          <ul>
+            {state.scoops.map((scoop) => (
+              <li className="ml-5" key={scoop.name}>
+                {scoop.name} - {scoop.quantity}
+              </li>
+            ))}
+          </ul>
+        </section>
         {state.toppings.length > 0 ? (
-          <>
-            <h2>Toppings: {state.orderSubtotals.toppings}</h2>
+          <section>
+            <header className="flex flex-col gap-1">
+              <h2 className="text-2xl font-bold">Toppings</h2>
+              <h3 className="text-md font-semibold">
+                Subtotal: {state.orderSubtotals.toppings}
+              </h3>
+            </header>
+
             <ul>
               {state.toppings.map((topping) => (
-                <li key={topping.name}>
+                <li className="ml-5" key={topping.name}>
                   {topping.name} - {topping.quantity}
                 </li>
               ))}
             </ul>
-          </>
+          </section>
         ) : (
           <div>you Selected no toppings </div>
         )}
 
-        <h2>Grand Total: {state.orderGrandTotal}</h2>
+        <h2 className="text-2xl font-bold">
+          Grand Total: {state.orderGrandTotal}
+        </h2>
 
-        <Button onClick={() => console.log({ state })}>Order Sundae !!</Button>
+        <Button
+          onClick={() => {
+            mutate(state);
+          }}
+        >
+          Order Sundae !!
+        </Button>
       </main>
     </>
   );

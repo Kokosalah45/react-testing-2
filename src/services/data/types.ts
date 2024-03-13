@@ -10,8 +10,3 @@ export type OrderCategory = {
   max: number;
   options: OrderOption[];
 };
-
-export type OrderCategoryResponse = Record<
-  "toppings" | "scoops",
-  OrderCategory
->;

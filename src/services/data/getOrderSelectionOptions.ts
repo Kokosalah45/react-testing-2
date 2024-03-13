@@ -1,5 +1,10 @@
 import client from "./client";
-import { OrderCategoryResponse } from "./types";
+import { OrderCategory } from "./types";
+
+export type OrderCategoryResponse = Record<
+  "toppings" | "scoops",
+  OrderCategory
+>;
 
 export async function getOrderSelectionOptions() {
   const response = await client.get<OrderCategoryResponse>("/order-selection");

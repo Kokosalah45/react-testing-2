@@ -4,10 +4,10 @@ import { server } from "@/mocks/node";
 import { errorHandlers } from "@/mocks/handlers";
 import userEvent from "@testing-library/user-event";
 import { render } from "@/test-utils";
-import App from "@/App";
+import OrderEntryPage from ".";
 
 test("renders a selection sections", async () => {
-  render(<App />);
+  render(<OrderEntryPage />);
 
   const scoopsSection = await screen.findByRole("heading", {
     name: "scoops",
@@ -21,13 +21,13 @@ test("renders a selection sections", async () => {
 
 test("renders alert with proper messages when an error takes place", async () => {
   server.use(...errorHandlers);
-  render(<App />);
+  render(<OrderEntryPage />);
   const alerts = await screen.findAllByRole("alert");
   expect(alerts).toHaveLength(2);
 });
 
 test("renders a selection images", async () => {
-  render(<App />);
+  render(<OrderEntryPage />);
   const selectionsImages = await screen.findAllByRole("img");
   expect(selectionsImages).toHaveLength(10);
 });
@@ -35,7 +35,7 @@ test("renders a selection images", async () => {
 test("renders correct subtotals for scoops and toppings", async () => {
   const user = userEvent.setup();
 
-  render(<App />);
+  render(<OrderEntryPage />);
 
   const scoopsSubtotal = await screen.findByText(/scoops subtotal/i);
   const toppingsSubtotal = await screen.findByText(/toppings subtotal/i);
