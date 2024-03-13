@@ -12,9 +12,9 @@ import { Input } from "../ui/input";
 import { Checkbox } from "../ui/checkbox";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { useEffect } from "react";
-import { OrderOption } from "@/services/data/types";
 import useGetOrderSelectionOptions from "@/hooks/useGetOrderSelectionOptions";
 import { useNavigate } from "react-router-dom";
+import { OrderRequest } from "@/services/data/postOrderSelection";
 
 const OrderSelectionForm = () => {
   const { data, isLoading, isFetching, isError, status } =
@@ -23,8 +23,8 @@ const OrderSelectionForm = () => {
   const navigate = useNavigate();
 
   const form = useForm<{
-    scoops: (Omit<OrderOption, "imagePath"> & { quantity: number })[];
-    toppings: (Omit<OrderOption, "imagePath"> & { quantity: number })[];
+    scoops: OrderRequest["scoops"];
+    toppings: OrderRequest["toppings"];
   }>({
     defaultValues: {
       scoops: [],
@@ -172,7 +172,7 @@ const OrderSelectionForm = () => {
         })}
 
         <p className="text-2xl font-bold">
-          Grand Total : {orderSubtotals.scoops + orderSubtotals.toppings}
+          Grand Total: ${orderSubtotals.scoops + orderSubtotals.toppings}
         </p>
         <Button type="submit" className="hover:bg-slate-950">
           Submit

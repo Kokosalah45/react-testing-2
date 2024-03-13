@@ -63,3 +63,31 @@ test("renders correct subtotals for scoops and toppings", async () => {
   expect(scoopsSubtotal).toHaveTextContent("scoops subtotal: $7");
   expect(toppingsSubtotal).toHaveTextContent("toppings subtotal: $3");
 });
+
+test("render correct grand total", async () => {
+  const user = userEvent.setup();
+  render(<OrderEntryPage />);
+  const grandTotal = await screen.findByText("Grand Total", {
+    exact: false,
+  });
+  expect(grandTotal).toHaveTextContent("Grand Total: $0");
+
+  const chocolateScoop = await screen.findByRole("checkbox", {
+    name: /chocolate/i,
+  });
+
+  const mintScoop = await screen.findByRole("checkbox", {
+    name: /mint/i,
+  });
+
+  const cherryTopping = await screen.findByRole("spinbutton", {
+    name: /cherries/i,
+  });
+
+  await user.click(chocolateScoop);
+  await user.click(mintScoop);
+  await user.clear(cherryTopping);
+  await user.type(cherryTopping, "2");
+
+  expect(grandTotal).toHaveTextContent("Grand Total: $10");
+});

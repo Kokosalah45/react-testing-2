@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Checkbox } from "../ui/checkbox";
 import { cn } from "@/lib/utils";
 import {
@@ -7,6 +7,10 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
+import { OrderRequest } from "@/services/data/postOrderSelection";
+import { useLocation, useNavigate } from "react-router-dom";
+import usePostOrderRequest from "@/hooks/usePostOrderRequest";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 
 const TermsAndConditionsPopover = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -27,12 +31,35 @@ const TermsAndConditionsPopover = () => {
   );
 };
 
-type Props = {
-  onSubmitOrder: () => Promise<void>;
-};
+type Props = {};
 
-const OrderConfirmationForm = ({ onSubmitOrder }: Props) => {
+const OrderConfirmationForm = ({}: Props) => {
   const [isChecked, setIsChecked] = useState(false);
+
+  const { state } = useLocation() as {
+    state: OrderRequest;
+  };
+
+  const { data, isSuccess, mutate, isError } = usePostOrderRequest();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isSuccess) {
+      navigate("/order-confirmation", {
+        state: data,
+      });
+    }
+  }, [isSuccess]);
+
+  if (isError)
+    return (
+      <Alert>
+        <AlertTitle>Something went wrong</AlertTitle>
+        <AlertDescription>
+          There was an error processing your order. Please try again.
+        </AlertDescription>
+      </Alert>
+    );
 
   return (
     <form
@@ -41,7 +68,7 @@ const OrderConfirmationForm = ({ onSubmitOrder }: Props) => {
         const formData = new FormData(e.currentTarget);
         const isAgreed = formData.get("termsAndConditions");
         if (isAgreed) {
-          await onSubmitOrder();
+          mutate(state);
         }
       }}
     >

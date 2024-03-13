@@ -1,9 +1,7 @@
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
-import usePostOrderRequest from "@/hooks/usePostOrderRequest";
+import OrderConfirmationForm from "@/components/OrderConfirmationForm";
 import { OrderRequest } from "@/services/data/postOrderSelection";
 import { useEffect } from "react";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 
 const OrderSummaryPage = () => {
   const { state } = useLocation() as {
@@ -14,28 +12,7 @@ const OrderSummaryPage = () => {
     window.history.replaceState({}, "");
   }, []);
 
-  const { data, isSuccess, mutate, isError } = usePostOrderRequest();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (isSuccess) {
-      navigate("/order-confirmation", {
-        state: data,
-      });
-    }
-  }, [isSuccess]);
-
   if (!state) return <Navigate to={"/"} />;
-
-  if (isError)
-    return (
-      <Alert>
-        <AlertTitle>Something went wrong</AlertTitle>
-        <AlertDescription>
-          There was an error processing your order. Please try again.
-        </AlertDescription>
-      </Alert>
-    );
 
   return (
     <>
@@ -85,13 +62,7 @@ const OrderSummaryPage = () => {
           Grand Total: {state.orderGrandTotal}
         </h2>
 
-        <Button
-          onClick={() => {
-            mutate(state);
-          }}
-        >
-          Order Sundae !!
-        </Button>
+        <OrderConfirmationForm />
       </main>
     </>
   );

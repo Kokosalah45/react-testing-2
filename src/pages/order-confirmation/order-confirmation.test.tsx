@@ -9,8 +9,7 @@ beforeAll(() => {
     const mod = (await importOriginal()) as Record<string, unknown>;
     return {
       ...mod,
-      // replace some exports
-      useLocation: () => ({
+      useLocation: vi.fn().mockReturnValue({
         state: {
           orderNumber: 1234,
         },
@@ -19,66 +18,27 @@ beforeAll(() => {
   });
 });
 
-test("renders a button", async () => {
+test("renders a heading", async () => {
   render(<OrderConfirmationPage />);
-  const buttonEL = screen.getByRole("button", {
-    name: /Confirm Order/i,
+  const heading = screen.getByRole("heading", {
+    name: /thank you for your order!/i,
   });
-  expect(buttonEL).toBeInTheDocument();
+  expect(heading).toBeInTheDocument();
 });
 
-test("renders a checkbox", async () => {
+test("renders a link to order again", async () => {
   render(<OrderConfirmationPage />);
-  const checkboxEL = screen.getByRole("checkbox");
-  expect(checkboxEL).toBeInTheDocument();
+  const link = screen.getByRole("link", {
+    name: /wanna order again\?/i,
+  });
+  expect(link).toBeInTheDocument();
+  userEvent.click(link);
+  expect(window.location.pathname).toBe("/");
 });
 
-test("clicking the checkbox toggles the checked state", async () => {
-  const user = userEvent.setup();
+test("order number is displayed", async () => {
   render(<OrderConfirmationPage />);
-  const checkboxEL = screen.getByRole("checkbox");
-  await user.click(checkboxEL);
-  expect(checkboxEL).toBeChecked();
-  await user.click(checkboxEL);
-  expect(checkboxEL).not.toBeChecked();
-});
-
-test("should toggle the button state on checking and unchecking terms and conditions checkbox", async () => {
-  const user = userEvent.setup();
-  render(<OrderConfirmationPage />);
-  const checkboxEL = screen.getByRole("checkbox", {
-    name: /I agree on Terms and Conditions/i,
-  });
-  const buttonEL = screen.getByRole("button", {
-    name: /Confirm Order/i,
-  });
-  await user.click(checkboxEL);
-  expect(buttonEL).toBeEnabled();
-  await user.click(checkboxEL);
-  expect(buttonEL).toBeDisabled();
-});
-
-test("terms and conditions popover shouldn't be on the screen", async () => {
-  render(<OrderConfirmationPage />);
-
-  const popover = screen.queryByRole("dialog", {
-    name: /Place content for the popover here./i,
-  });
-  expect(popover).not.toBeInTheDocument();
-});
-
-test("terms and conditions popover should be on the screen on hover", async () => {
-  const user = userEvent.setup();
-
-  render(<OrderConfirmationPage />);
-
-  const termsAndConditions = screen.getByRole("button", {
-    name: /Terms and Conditions/i,
-  });
-
-  await user.hover(termsAndConditions);
-
-  const popover = screen.getByText(/Place content for the popover here./i);
-
-  expect(popover).toBeInTheDocument();
+  const orderNumber = screen.getByText(/your order number/i);
+  expect(orderNumber).toBeInTheDocument();
+  expect(orderNumber.nextSibling).toHaveTextContent("1234");
 });
